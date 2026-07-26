@@ -11,6 +11,7 @@ Gmail Briefing 邮件翻译服务 - 主入口
 """
 
 import logging
+import logging.handlers
 import sys
 import time
 from datetime import datetime, timedelta
@@ -40,7 +41,7 @@ from src.html_processor import process_html, process_plain_text
 from src.state_manager import StateManager
 from src.translator import translate_text
 
-# 配置日志
+# 配置日志（自动按大小轮转，保留最近 5 个备份，每个最大 5MB）
 _log_dir = Path(LOG_DIR)
 _log_dir.mkdir(parents=True, exist_ok=True)
 _log_file = _log_dir / "service.log"
@@ -49,7 +50,12 @@ logging.basicConfig(
     level=getattr(logging, LOG_LEVEL.upper(), logging.INFO),
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     handlers=[
-        logging.FileHandler(str(_log_file), encoding="utf-8"),
+        logging.handlers.RotatingFileHandler(
+            filename=str(_log_file),
+            maxBytes=5 * 1024 * 1024,   # 5 MB
+            backupCount=5,               # 保留 service.log.1 ~ service.log.5
+            encoding="utf-8",
+        ),
         logging.StreamHandler(sys.stdout),
     ],
 )

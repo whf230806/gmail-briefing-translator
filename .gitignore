@@ -22,6 +22,7 @@ data/state.db
 
 # Logs
 logs/*.log
+logs/*.log.*
 
 # IDE
 .idea/
