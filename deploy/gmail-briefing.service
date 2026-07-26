@@ -1,0 +1,27 @@
+[Unit]
+Description=Gmail Briefing Translator Service
+Documentation=https://github.com/yourusername/gmail-briefing-translator
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/gmail-briefing-translator
+EnvironmentFile=/opt/gmail-briefing-translator/.env
+ExecStart=/opt/gmail-briefing-translator/venv/bin/python -m src.main
+Restart=on-failure
+RestartSec=60
+
+# 日志
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=gmail-briefing
+
+# 安全加固
+NoNewPrivileges=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target
